@@ -11,7 +11,7 @@ public class Configuration {
     }
 
     public CustomAnnotationsConfiguration annotations() {
-        return this.annotations();
+        return this.annotations;
     }
 
     public Configuration build() {
