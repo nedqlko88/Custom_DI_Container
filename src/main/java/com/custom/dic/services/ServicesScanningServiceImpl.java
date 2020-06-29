@@ -3,12 +3,15 @@ package com.custom.dic.services;
 import com.custom.dic.annotations.*;
 import com.custom.dic.config.configurations.CustomAnnotationsConfiguration;
 import com.custom.dic.models.ServiceDetails;
+import com.custom.dic.utils.ServiceDetailsConstructComparator;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ServicesScanningServiceImpl implements ServicesScanningService {
     private final CustomAnnotationsConfiguration configuration;
@@ -40,11 +43,13 @@ public class ServicesScanningServiceImpl implements ServicesScanningService {
                     );
 
                     serviceDetailsStorage.add(serviceDetails);
+                    break;
                 }
             }
         }
 
-        return serviceDetailsStorage;
+        return serviceDetailsStorage.stream().sorted(new ServiceDetailsConstructComparator())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private Constructor<?> findSuitableConstructor(Class<?> cls) {
@@ -84,7 +89,10 @@ public class ServicesScanningServiceImpl implements ServicesScanningService {
 
             for (Class<? extends Annotation> beanAnnotation : customBeanAnnotations) {
                 if (method.isAnnotationPresent(beanAnnotation)) {
+                    method.setAccessible(true);
                     beanMethods.add(method);
+
+                    break;
                 }
             }
         }
