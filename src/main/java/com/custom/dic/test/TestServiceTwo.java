@@ -1,16 +1,19 @@
 package com.custom.dic.test;
 
 
-import com.custom.dic.annotations.Autowired;
-import com.custom.dic.annotations.PostConstruct;
-import com.custom.dic.annotations.PreDestroy;
-import com.custom.dic.annotations.Service;
+import com.custom.dic.annotations.*;
+
+import javax.print.attribute.standard.MediaSize;
 
 @Service
 public class TestServiceTwo {
     private final TestServiceOne testServiceOne;
 
-    @Autowired
+
+//    @Autowired
+    public TestServiceTwo() {
+        this.testServiceOne = null;
+    }
     public TestServiceTwo(TestServiceOne testServiceOne) {
         this.testServiceOne = testServiceOne;
     }
@@ -23,6 +26,11 @@ public class TestServiceTwo {
     @PreDestroy
     private void onDestroy() {
 
+    }
+
+    @Bean
+    public OtherService otherService() {
+        return new OtherService();
     }
 
 }
