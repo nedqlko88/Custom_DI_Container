@@ -1,6 +1,6 @@
 package com.custom.dic.exceptions;
 
-public class BeanException extends InstantiationException {
+public class BeanException extends ServiceInstantiationException {
     public BeanException(String message) {
         super(message);
     }
