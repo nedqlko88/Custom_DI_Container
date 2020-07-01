@@ -6,11 +6,12 @@ import com.custom.dic.models.Directory;
 import com.custom.dic.models.ServiceDetails;
 import com.custom.dic.services.*;
 
+import java.util.List;
 import java.util.Set;
 
 public class DependencyInjector {
     public static void main(String[] args) {
-    run(DependencyInjector.class);
+        run(DependencyInjector.class);
     }
 
     public static void run(Class<?> startupClass) {
@@ -19,6 +20,12 @@ public class DependencyInjector {
 
     public static void run(Class<?> startupClass, Configuration configuration) {
         ServicesScanningService scanningService = new ServicesScanningServiceImpl(configuration.annotations());
+        ObjectInstantiationService objectInstantiationService = new ObjectInstantiationServiceImpl();
+        ServicesInstantiationService instantiationService = new ServicesInstantiationServiceImpl(
+                configuration.instantiations(),
+                objectInstantiationService
+        );
+
         DirectoryResolver directoryResolver = new DirectoryResolverImpl();
         Directory directory = directoryResolver.resolveDirectory(startupClass);
 //        Directory directory = new DirectoryResolverImpl().resolveDirectory(startupClass);
@@ -30,7 +37,9 @@ public class DependencyInjector {
 
         Set<Class<?>> locatedClasses = classLocator.locateClasses(directory.getDirectory());
 
-        Set<ServiceDetails<?>> serviceDetails = scanningService.mapServices(locatedClasses);
-        System.out.println(serviceDetails);
+        Set<ServiceDetails<?>> mappedServices = scanningService.mapServices(locatedClasses);
+        List<ServiceDetails<?>> serviceDetails = instantiationService.instantiateServicesAndBeans(mappedServices);
+
+
     }
 }

@@ -7,20 +7,17 @@ import javax.print.attribute.standard.MediaSize;
 
 @Service
 public class TestServiceTwo {
+
     private final TestServiceOne testServiceOne;
 
-
-//    @Autowired
-    public TestServiceTwo() {
-        this.testServiceOne = null;
-    }
     public TestServiceTwo(TestServiceOne testServiceOne) {
         this.testServiceOne = testServiceOne;
     }
 
+
     @PostConstruct
     private void onInit() {
-
+        System.out.println("testing post for service 2");
     }
 
     @PreDestroy
@@ -30,6 +27,7 @@ public class TestServiceTwo {
 
     @Bean
     public OtherService otherService() {
+        System.out.println("the bean is instantiated");
         return new OtherService();
     }
 
