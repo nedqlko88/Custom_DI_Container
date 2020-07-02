@@ -68,8 +68,9 @@ public class ServiceDetails<T> {
         return instance;
     }
 
-    public void setInstance(T instance) {
-        this.instance = instance;
+    @SuppressWarnings("unchecked")
+    public void setInstance(Object instance) {
+        this.instance =(T) instance;
     }
 
     public Method getPostConstructMethod() {
